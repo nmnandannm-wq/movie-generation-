@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 try:
     from google import genai
 except ImportError:
@@ -13,53 +14,58 @@ except ImportError:
 
 def get_ai_client():
     """
-    Creates the Google Gemini AI client.
+    Creates a Gemini AI client using a secure environment variable.
     """
 
     api_key = os.getenv("GEMINI_API_KEY")
 
     if not api_key:
         raise ValueError(
-            "GEMINI_API_KEY is missing. Add it to your .env file."
+            "GEMINI_API_KEY is missing. "
+            "Add it to Streamlit Secrets."
         )
 
     if genai is None:
         raise ImportError(
             "google-genai is not installed. "
-            "Run: pip install google-genai"
+            "Add google-genai to requirements.txt."
         )
 
-    return genai.Client(api_key=api_key)
+    return genai.Client(
+        api_key=api_key
+    )
 
 
-def calculate_story_structure(duration_minutes: int) -> Dict[str, Any]:
-    """
-    Calculates the approximate story structure
-    based on the requested movie duration.
-    """
+def calculate_story_structure(
+    duration_minutes: int
+) -> Dict[str, Any]:
 
     if duration_minutes <= 5:
+
         scenes = 10
-        acts = 3
 
     elif duration_minutes <= 10:
+
         scenes = 20
-        acts = 3
 
     elif duration_minutes <= 20:
+
         scenes = 35
-        acts = 3
 
     else:
+
         scenes = 50
-        acts = 3
 
     return {
         "duration_minutes": duration_minutes,
         "approximate_scenes": scenes,
-        "acts": acts,
-        "average_scene_duration_seconds": int(
-            (duration_minutes * 60) / scenes
+        "acts": 3,
+        "average_scene_duration_seconds": max(
+            30,
+            int(
+                (duration_minutes * 60)
+                / scenes
+            )
         )
     }
 
@@ -81,7 +87,7 @@ You are an expert filmmaker, screenwriter,
 story architect, and AI animation director.
 
 Create a complete original {duration_minutes}-minute
-cinematic movie based on this idea:
+cinematic movie based on the following idea:
 
 STORY IDEA:
 {story_idea}
@@ -96,75 +102,105 @@ VISUAL STYLE:
 {visual_style}
 
 MOVIE STRUCTURE:
-The movie must contain approximately
-{structure["approximate_scenes"]} scenes divided into
-{structure["acts"]} acts.
 
-The average scene duration should be approximately
-{structure["average_scene_duration_seconds"]} seconds.
+Duration:
+{duration_minutes} minutes
 
-IMPORTANT STORY REQUIREMENTS:
+Approximate scenes:
+{structure["approximate_scenes"]}
 
-1. Create a strong beginning, middle, and ending.
+Acts:
+{structure["acts"]}
 
-2. Build a complete cinematic story with:
-   - Introduction
-   - Character development
-   - Conflict
-   - Rising tension
-   - Emotional moments
-   - Major turning points
-   - Climax
-   - Resolution
+Average scene duration:
+{structure["average_scene_duration_seconds"]} seconds
 
-3. Maintain character continuity throughout the entire story.
+STORY REQUIREMENTS:
 
-4. Do not randomly change:
-   - Character appearance
-   - Character personality
-   - Clothing
-   - Powers
-   - Relationships
-   - Locations
-   - Story rules
+1. Create a complete cinematic story with a strong beginning,
+middle, climax, and satisfying ending.
 
-5. Every scene must logically continue from
-   the previous scene.
+2. Use a professional three-act structure:
 
-6. Create detailed characters before creating scenes.
+ACT 1:
+Introduction, world building, characters, and the main conflict.
 
-7. Create a detailed world and its rules.
+ACT 2:
+Rising conflict, emotional development, discoveries,
+failures, challenges, and major turning points.
 
-8. Every scene must include:
-   - Scene number
-   - Scene title
-   - Act
-   - Location
-   - Time of day
-   - Characters present
-   - Story purpose
-   - Action
-   - Character emotions
-   - Dialogue
-   - Narration if required
-   - Visual description
-   - Camera direction
-   - Lighting
-   - Environment movement
-   - Sound effects
-   - Background music
-   - Image generation prompt
-   - Animation prompt
+ACT 3:
+Climax, final confrontation, emotional resolution,
+and a satisfying ending.
 
-9. The movie must feel like a professionally written
-cinematic film and not like disconnected AI-generated clips.
+3. Create detailed characters before creating scenes.
 
-10. If the language is Hindi, all dialogues and narration
-must be written in Hindi.
+4. Maintain perfect character continuity throughout the movie.
+
+Never randomly change:
+
+- Face
+- Hair
+- Age
+- Body type
+- Clothing
+- Personality
+- Powers
+- Weapons
+- Relationships
+- Character development
+
+5. Maintain world continuity.
+
+Locations, rules, powers, technology,
+magic, mythology, and story logic must remain consistent.
+
+6. Every scene must logically continue from the previous scene.
+
+7. The story must feel like a professionally written movie,
+not disconnected AI-generated clips.
+
+8. If the language is Hindi,
+all dialogue and narration must be written in Hindi.
+
+9. Every scene must include:
+
+- Scene number
+- Scene title
+- Act
+- Duration
+- Location
+- Time of day
+- Characters present
+- Story purpose
+- Action
+- Character emotions
+- Dialogue
+- Narration
+- Visual description
+- Camera direction
+- Lighting
+- Environment animation
+- Sound effects
+- Background music
+- Image generation prompt
+- Animation prompt
+
+10. Image prompts must maintain character consistency.
+
+11. Animation prompts must describe realistic movement,
+camera movement, environment animation, emotions,
+lighting, and cinematic action.
+
+12. The movie must contain emotional moments,
+tension, surprises, memorable character moments,
+and a powerful climax.
 
 RETURN ONLY VALID JSON.
 
-Use this exact JSON structure:
+DO NOT RETURN MARKDOWN.
+
+USE THIS EXACT JSON STRUCTURE:
 
 {{
     "movie": {{
@@ -200,7 +236,19 @@ Use this exact JSON structure:
             "act_number": 1,
             "title": "",
             "purpose": "",
-            "scenes": []
+            "scene_numbers": []
+        }},
+        {{
+            "act_number": 2,
+            "title": "",
+            "purpose": "",
+            "scene_numbers": []
+        }},
+        {{
+            "act_number": 3,
+            "title": "",
+            "purpose": "",
+            "scene_numbers": []
         }}
     ],
 
@@ -241,6 +289,7 @@ def generate_story(
 ) -> Dict[str, Any]:
 
     if not story_idea.strip():
+
         raise ValueError(
             "Story idea cannot be empty."
         )
@@ -260,18 +309,42 @@ def generate_story(
         contents=prompt
     )
 
+    if not response or not response.text:
+
+        raise ValueError(
+            "Gemini returned an empty response."
+        )
+
     response_text = response.text.strip()
 
-    if response_text.startswith("```"):
-        response_text = response_text.replace(
-            "```json",
-            ""
-        ).replace(
-            "```",
-            ""
-        ).strip()
+    if response_text.startswith(
+        "```json"
+    ):
+
+        response_text = response_text[
+            7:
+        ]
+
+    elif response_text.startswith(
+        "```"
+    ):
+
+        response_text = response_text[
+            3:
+        ]
+
+    if response_text.endswith(
+        "```"
+    ):
+
+        response_text = response_text[
+            :-3
+        ]
+
+    response_text = response_text.strip()
 
     try:
+
         story_data = json.loads(
             response_text
         )
@@ -279,7 +352,8 @@ def generate_story(
     except json.JSONDecodeError as error:
 
         raise ValueError(
-            f"AI returned invalid JSON: {error}"
+            "Gemini returned invalid JSON. "
+            f"Details: {error}"
         )
 
     return story_data

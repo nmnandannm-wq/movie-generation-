@@ -1,0 +1,45 @@
+# Python cache
+
+**pycache**/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+
+venv/
+.venv/
+env/
+
+# Environment variables and API keys
+
+.env
+.env.*
+!.env.example
+
+# Streamlit
+
+.streamlit/secrets.toml
+
+# Generated files
+
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+
+# Uploaded files
+
+uploads/
+generated_videos/
+generated_images/
+
+# IDE files
+
+.vscode/
+.idea/
+
+# Operating system files
+
+.DS_Store
+Thumbs.db

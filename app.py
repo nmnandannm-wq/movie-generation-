@@ -20,116 +20,87 @@ initial_sidebar_state="expanded"
 
 # ─────────────────────────────────────────────
 
-st.markdown("""
+st.markdown(
+""" <style>
+.stApp {
+background: #08090d;
+color: #f5f5f5;
+}
 
-<style>
+```
+section[data-testid="stSidebar"] {
+    background: #0d0f15;
+    border-right: 1px solid #20232c;
+}
 
-    /* Main background */
-    .stApp {
-        background: #08090d;
-        color: #f5f5f5;
-    }
+.main .block-container {
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+    max-width: 1500px;
+}
 
-    /* Sidebar */
-    section[data-testid="stSidebar"] {
-        background: #0d0f15;
-        border-right: 1px solid #20232c;
-    }
+.hero-title {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 4px;
+}
 
-    /* Main content */
-    .main .block-container {
-        padding-top: 2rem;
-        padding-bottom: 4rem;
-        max-width: 1500px;
-    }
+.hero-subtitle {
+    color: #8d93a1;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
 
-    /* Header */
-    .hero-title {
-        font-size: 42px;
-        font-weight: 800;
-        letter-spacing: -1px;
-        margin-bottom: 4px;
-    }
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
 
-    .hero-subtitle {
-        color: #8d93a1;
-        font-size: 16px;
-        margin-bottom: 30px;
-    }
+.stButton > button {
+    width: 100%;
+    border-radius: 10px;
+    height: 46px;
+    font-weight: 700;
+    border: 1px solid #343945;
+    background: #181c25;
+    color: white;
+}
 
-    /* Cards */
-    .card {
-        background: #11141b;
-        border: 1px solid #242833;
-        border-radius: 16px;
-        padding: 24px;
-        margin-bottom: 20px;
-    }
+.stButton > button:hover {
+    border-color: #ffffff;
+    background: #222733;
+}
 
-    .section-title {
-        font-size: 20px;
-        font-weight: 700;
-        margin-bottom: 15px;
-    }
+textarea {
+    background: #0b0d12 !important;
+    color: white !important;
+    border: 1px solid #2b303b !important;
+    border-radius: 12px !important;
+}
 
-    /* Buttons */
-    .stButton > button {
-        width: 100%;
-        border-radius: 10px;
-        height: 46px;
-        font-weight: 700;
-        border: 1px solid #343945;
-        background: #181c25;
-        color: white;
-        transition: 0.2s;
-    }
+div[data-baseweb="select"] > div {
+    background: #0b0d12;
+    border-color: #2b303b;
+}
 
-    .stButton > button:hover {
-        border-color: #ffffff;
-        background: #222733;
-    }
+div[data-testid="stMetric"] {
+    background: #11141b;
+    border: 1px solid #242833;
+    padding: 15px;
+    border-radius: 12px;
+}
 
-    /* Primary button */
-    div[data-testid="stButton"] button[kind="primary"] {
-        background: #ffffff;
-        color: #000000;
-        border: none;
-    }
-
-    div[data-testid="stButton"] button[kind="primary"]:hover {
-        background: #dddddd;
-    }
-
-    /* Text areas */
-    textarea {
-        background: #0b0d12 !important;
-        color: white !important;
-        border: 1px solid #2b303b !important;
-        border-radius: 12px !important;
-    }
-
-    /* Select boxes */
-    div[data-baseweb="select"] > div {
-        background: #0b0d12;
-        border-color: #2b303b;
-    }
-
-    /* Metrics */
-    div[data-testid="stMetric"] {
-        background: #11141b;
-        border: 1px solid #242833;
-        padding: 15px;
-        border-radius: 12px;
-    }
-
-    /* Divider */
-    hr {
-        border-color: #242833;
-    }
-
+hr {
+    border-color: #242833;
+}
 </style>
+""",
+unsafe_allow_html=True
+```
 
-""", unsafe_allow_html=True)
+)
 
 # ─────────────────────────────────────────────
 
@@ -188,7 +159,7 @@ st.caption("Built for cinematic creators")
 
 # ─────────────────────────────────────────────
 
-# MAIN HEADER
+# HEADER
 
 # ─────────────────────────────────────────────
 
@@ -206,7 +177,7 @@ unsafe_allow_html=True
 
 # ─────────────────────────────────────────────
 
-# CREATE VIDEO PAGE
+# CREATE VIDEO
 
 # ─────────────────────────────────────────────
 
@@ -215,8 +186,7 @@ if page == "🎥 Create Video":
 ```
 left, right = st.columns([1.2, 0.8], gap="large")
 
-# ───────────── LEFT PANEL ─────────────
-
+# LEFT PANEL
 with left:
 
     st.markdown(
@@ -289,7 +259,9 @@ with left:
 
     negative_prompt = st.text_area(
         "Negative Prompt",
-        placeholder="blurry, distorted face, low quality, extra fingers...",
+        placeholder=(
+            "blurry, distorted face, low quality, extra fingers..."
+        ),
         height=80
     )
 
@@ -310,8 +282,7 @@ with left:
             type="primary"
         )
 
-# ───────────── RIGHT PANEL ─────────────
-
+# RIGHT PANEL
 with right:
 
     st.markdown(
@@ -319,32 +290,28 @@ with right:
         unsafe_allow_html=True
     )
 
-    preview_box = st.container()
-
-    with preview_box:
-
-        st.markdown(
-            """
-            <div style="
-                height: 430px;
-                border: 1px dashed #343945;
-                border-radius: 16px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: #0b0d12;
-                text-align: center;
-            ">
-                <div>
-                    <div style="font-size: 55px;">🎬</div>
-                    <div style="color:#8d93a1;">
-                        Your generated video will appear here
-                    </div>
+    st.markdown(
+        """
+        <div style="
+            height: 430px;
+            border: 1px dashed #343945;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0b0d12;
+            text-align: center;
+        ">
+            <div>
+                <div style="font-size: 55px;">🎬</div>
+                <div style="color:#8d93a1;">
+                    Your generated video will appear here
                 </div>
             </div>
-            """,
-            unsafe_allow_html=True
-        )
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     st.markdown("")
 
@@ -352,24 +319,17 @@ with right:
         "💡 Tip: Describe the subject, environment, lighting, "
         "camera movement, mood, and visual style for better results."
     )
-```
-
-# ─────────────────────────────────────────────
 
 # PROMPT ENHANCEMENT
+if enhance_prompt:
 
-# ─────────────────────────────────────────────
+    if not prompt.strip():
 
-if page == "🎥 Create Video" and enhance_prompt:
+        st.warning("Please enter a video idea first.")
 
-```
-if not prompt.strip():
+    else:
 
-    st.warning("Please enter a video idea first.")
-
-else:
-
-    enhanced = f"""
+        enhanced = f"""
 ```
 
 Create a {duration} {style.lower()} cinematic video.
@@ -378,8 +338,9 @@ Main subject and action:
 {prompt}
 
 Visual direction:
-High-quality {style.lower()} visual style, detailed environment, realistic lighting,
-strong cinematic composition, professional production quality.
+High-quality {style.lower()} visual style, detailed environment,
+realistic lighting, strong cinematic composition, professional
+production quality.
 
 Camera:
 {camera} with smooth, controlled cinematic motion.
@@ -388,53 +349,52 @@ Aspect ratio:
 {aspect_ratio}
 
 Atmosphere:
-Dramatic mood, rich depth, natural environmental movement, realistic shadows,
-detailed textures, immersive cinematic presentation.
+Dramatic mood, rich depth, natural environmental movement,
+realistic shadows, detailed textures, immersive cinematic presentation.
 
 Negative prompt:
-{negative_prompt if negative_prompt else "low quality, blurry, distorted anatomy, unwanted objects"}
+{
+negative_prompt
+if negative_prompt
+else "low quality, blurry, distorted anatomy, unwanted objects"
+}
 """
 
 ```
-    st.session_state.generated_prompt = enhanced.strip()
+        st.session_state.generated_prompt = enhanced.strip()
 
-    st.success("✨ Prompt enhanced successfully!")
+        st.success("✨ Prompt enhanced successfully!")
 
-    st.text_area(
-        "Enhanced Cinematic Prompt",
-        value=st.session_state.generated_prompt,
-        height=300
-    )
-```
+        st.text_area(
+            "Enhanced Cinematic Prompt",
+            value=st.session_state.generated_prompt,
+            height=300
+        )
 
-# ─────────────────────────────────────────────
+# VIDEO GENERATION
+if generate_video:
 
-# VIDEO GENERATION PLACEHOLDER
+    if not prompt.strip():
 
-# ─────────────────────────────────────────────
+        st.error("Please enter a video prompt first.")
 
-if page == "🎥 Create Video" and generate_video:
+    else:
 
-```
-if not prompt.strip():
+        st.session_state.video_generated = True
 
-    st.error("Please enter a video prompt first.")
+        with st.spinner(
+            "🎬 Preparing your cinematic video..."
+        ):
 
-else:
+            time.sleep(2)
 
-    st.session_state.video_generated = True
+        st.success(
+            "Your video generation request is ready!"
+        )
 
-    with st.spinner("🎬 Preparing your cinematic video..."):
-
-        time.sleep(2)
-
-    st.success(
-        "Your video generation request is ready!"
-    )
-
-    st.info(
-        "🚀 The actual AI video generation API will be connected in the next step."
-    )
+        st.info(
+            "🚀 The real AI video-generation API will be connected next."
+        )
 ```
 
 # ─────────────────────────────────────────────
@@ -463,13 +423,19 @@ if uploaded_image:
 
     motion_prompt = st.text_area(
         "Describe the motion",
-        placeholder="Camera slowly moves forward while the character's clothes move in the wind..."
+        placeholder=(
+            "Camera slowly moves forward while the character's "
+            "clothes move in the wind..."
+        )
     )
 
-    if st.button("🎬 Animate Image", type="primary"):
+    if st.button(
+        "🎬 Animate Image",
+        type="primary"
+    ):
 
         st.info(
-            "🚀 Image-to-video API will be connected in the next step."
+            "🚀 Image-to-video API will be connected next."
         )
 ```
 
@@ -487,7 +453,9 @@ st.markdown("## 🎞️ AI Scene Generator")
 project_idea = st.text_area(
     "Describe your movie, trailer, or story",
     height=180,
-    placeholder="Example: Create a 2-minute Mahabharata anime trailer..."
+    placeholder=(
+        "Example: Create a 2-minute Mahabharata anime trailer..."
+    )
 )
 
 number_of_scenes = st.slider(
@@ -497,11 +465,16 @@ number_of_scenes = st.slider(
     value=10
 )
 
-if st.button("✨ Generate Scene Structure", type="primary"):
+if st.button(
+    "✨ Generate Scene Structure",
+    type="primary"
+):
 
     if not project_idea.strip():
 
-        st.warning("Please describe your project first.")
+        st.warning(
+            "Please describe your project first."
+        )
 
     else:
 
@@ -509,13 +482,20 @@ if st.button("✨ Generate Scene Structure", type="primary"):
             f"Ready to generate {number_of_scenes} cinematic scenes!"
         )
 
-        for i in range(1, number_of_scenes + 1):
+        for i in range(
+            1,
+            number_of_scenes + 1
+        ):
 
-            with st.expander(f"🎬 Scene {i}"):
+            with st.expander(
+                f"🎬 Scene {i}"
+            ):
 
                 st.text_area(
                     f"Scene {i} Description",
-                    placeholder="Scene description will be generated by AI...",
+                    placeholder=(
+                        "Scene description will be generated by AI..."
+                    ),
                     key=f"scene_{i}"
                 )
 ```
@@ -551,15 +531,26 @@ st.subheader("🎬 Generation Preferences")
 
 st.selectbox(
     "Default Video Style",
-    ["Cinematic", "Anime", "Photorealistic", "Hollywood"]
+    [
+        "Cinematic",
+        "Anime",
+        "Photorealistic",
+        "Hollywood"
+    ]
 )
 
 st.selectbox(
     "Default Aspect Ratio",
-    ["16:9", "9:16", "1:1"]
+    [
+        "16:9",
+        "9:16",
+        "1:1"
+    ]
 )
 
 st.success(
     "VisionCraft AI is ready for AI model integration."
 )
+```
+
 ```
